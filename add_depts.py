@@ -8,7 +8,13 @@ if len(sys.argv) != 3:
 school_symbol = sys.argv[1]
 path = sys.argv[2]
 
-school = School.objects.get(symbol=school_symbol)
+try:
+    school = School.objects.get(symbol=school_symbol)
+except:
+    print('could not find school ' + school_symbol + ' in database')
+    print('did you add the schools first?')
+    sys.exit(2)
+
 with open(path, 'r') as f:
     for dept in f:
         symbol, name = dept.split('\t')
@@ -19,4 +25,4 @@ with open(path, 'r') as f:
         d = Department(school=school, symbol=symbol, name=name)
         d.save()
 
-        print('added ' + name + ' (' + symbol + ') to school ' + school)
+        print('added ' + name + ' (' + symbol + ') to school ' + str(school))
