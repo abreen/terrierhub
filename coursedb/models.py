@@ -20,8 +20,8 @@ class Department(models.Model):
 class Course(models.Model):
     department = models.ForeignKey(Department)
     number = models.IntegerField('course number')
-    description = models.TextField('course description')
-    note = models.TextField()
+    description = models.TextField('course description', blank=True)
+    note = models.TextField(blank=True)
 
     def __str__(self):
         return str(self.department) + ' ' + str(self.number)
