@@ -24,4 +24,4 @@ class Course(models.Model):
     note = models.TextField()
 
     def __str__(self):
-        return str(self.department) + ' ' + self.number
+        return str(self.department) + ' ' + str(self.number)
