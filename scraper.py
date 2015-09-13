@@ -22,7 +22,7 @@ ns = {'html': 'http://www.w3.org/1999/xhtml'}
 
 conn = http.client.HTTPConnection(COURSES_HOST)
 
-for school in ['cas', 'cfa']:
+for school in ['cfa']:
     print('scraping courses for school', school)
 
     school_dir_path = DATA_DIR + os.sep + school
@@ -53,7 +53,7 @@ for school in ['cas', 'cfa']:
     url_prefix = COURSES_URL.format(school)
 
     for page in range(1, lim_num + 1):
-        print('scraping page ', page)
+        print('scraping page', page)
 
         url = url_prefix + str(page) + '/'
 
@@ -85,13 +85,10 @@ for school in ['cas', 'cfa']:
             course_num = matches.group(3)
 
             span = li.find('html:span', ns)
-            note = span.text if span is not None else None
+            note = span.text if span is not None else ''
 
             br = li.findall('html:br', ns)[-1]
             desc = br.tail.strip()
-
-            if desc == '':
-                desc = None
 
             line = "{}\t{}\t{}\t{}\t{}".format(
                 school2, dept, course_num, note, desc
