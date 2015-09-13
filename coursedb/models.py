@@ -7,21 +7,21 @@ class School(models.Model):
     name = models.CharField(max_length=60)
 
     def __str__(self):
-        return self.name + ' (' + self.symbol + ')'
+        return self.symbol
 
 class Department(models.Model):
+    school = models.ForeignKey(School)
     symbol = models.CharField(max_length=2)
     name = models.CharField(max_length=60)
 
     def __str__(self):
-        return self.name + ' (' + self.symbol + ')'
+        return str(self.school) + ' ' + self.symbol
 
 class Course(models.Model):
-    school = models.ForeignKey(School)
     department = models.ForeignKey(Department)
     number = models.IntegerField('course number')
     description = models.TextField('course description')
     note = models.TextField()
 
     def __str__(self):
-        return str(self.school) + ' ' + str(self.department) + ' ' + self.number
+        return str(self.department) + ' ' + self.number
