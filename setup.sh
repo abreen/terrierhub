@@ -5,6 +5,8 @@ if [[ -e db.sqlite3 ]]; then
     exit 1
 fi
 
+export DJANGO_SETTINGS_MODULE=courses.settings
+
 # use Django tools to set up empty database
 python3 manage.py migrate || exit 2
 
