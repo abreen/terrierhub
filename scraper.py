@@ -10,7 +10,7 @@ import re
 import time
 
 
-PATTERN = r'(CAS|CFA|CGS|COM|ENG|EOP|FRA|GMS|GRS|GSM|LAW|MED|MET|OTP|PDP|SAR|SDM|SED|SHA|SMG|SPH|SSW|STH|UNI|XAS|XRG)\s+([A-Z]+)\s+(\d+)'
+PATTERN = r'(CAS|CFA|CGS|COM|ENG|EOP|FRA|GMS|GRS|GSM|LAW|MED|MET|OTP|PDP|SAR|SDM|SED|SHA|SMG|SPH|SSW|STH|UNI|XAS|XRG)\s+([A-Z]+)\s+(\d+)(?:: (.+))?'
 SCHOOLS = ['cas', 'cfa', 'cgs', 'com', 'eng', 'gms', 'grs', 'law', 'sar', 'sdm',
            'sed', 'sha', 'smg', 'sph', 'ssw', 'sth']
 COURSES_HOST = 'www.bu.edu'
@@ -83,6 +83,9 @@ for school in ['cas', 'cfa']:
             school2 = matches.group(1)
             dept = matches.group(2)
             course_num = matches.group(3)
+            name = matches.group(4)
+
+            name = name.strip()
 
             span = li.find('html:span', ns)
             note = span.text if span is not None else ''
@@ -90,8 +93,8 @@ for school in ['cas', 'cfa']:
             br = li.findall('html:br', ns)[-1]
             desc = br.tail.strip()
 
-            line = "{}\t{}\t{}\t{}\t{}".format(
-                school2, dept, course_num, note, desc
+            line = "{}\t{}\t{}\t{}\t{}\t{}".format(
+                school2, dept, course_num, name, note, desc
             )
 
             f.write(line)

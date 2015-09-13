@@ -20,11 +20,12 @@ class Department(models.Model):
 class Course(models.Model):
     department = models.ForeignKey(Department)
     number = models.IntegerField('course number')
+    title = models.CharField('course title', max_length=200)
     description = models.TextField('course description', blank=True)
     note = models.TextField(blank=True)
 
     def __str__(self):
-        return '{} {} {}'.format(
+        return '{} {} {}: {}'.format(
             self.department.school.symbol, self.department.symbol,
-            str(self.number)
+            str(self.number), self.title
         )

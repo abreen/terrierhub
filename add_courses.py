@@ -12,10 +12,11 @@ django.setup()
 
 with open(path, 'r') as f:
     for course in f:
-        school_sym, dept_sym, num, note, desc = course.split('\t')
+        school_sym, dept_sym, num, name, note, desc = course.split('\t')
 
         school_sym = school_sym.strip()
         dept_sym = dept_sym.strip()
+        name = name.strip()
         note = note.strip()
         desc = desc.strip()
 
@@ -31,7 +32,8 @@ with open(path, 'r') as f:
             print('could not find department', dept_sym, 'for school', s)
             continue
 
-        c = Course(department=d, number=int(num), description=desc, note=note)
+        c = Course(department=d, number=int(num), title=name,
+                   description=desc, note=note)
         c.save()
 
         print('added', str(c))
