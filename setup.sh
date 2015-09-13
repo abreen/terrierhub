@@ -18,5 +18,5 @@ python3 add_depts.py CAS rawdata/cas/depts.tsv || exit 4
 python3 add_depts.py CFA rawdata/cfa/depts.tsv || exit 4
 
 # add courses
-#python3 add_courses.py rawdata/cas/courses.tsv || exit 5
+python3 add_courses.py rawdata/cas/courses.tsv || exit 5
 python3 add_courses.py rawdata/cfa/courses.tsv || exit 5
