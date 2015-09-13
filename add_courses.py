@@ -11,8 +11,8 @@ path = sys.argv[1]
 django.setup()
 
 with open(path, 'r') as f:
-    for dept in f:
-        school_sym, dept_sym, num, note, desc = dept.split('\t')
+    for course in f:
+        school_sym, dept_sym, num, note, desc = course.split('\t')
 
         school_sym = school_sym.strip()
         dept_sym = dept_sym.strip()
