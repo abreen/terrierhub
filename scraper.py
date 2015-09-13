@@ -22,7 +22,7 @@ ns = {'html': 'http://www.w3.org/1999/xhtml'}
 
 conn = http.client.HTTPConnection(COURSES_HOST)
 
-for school in ['cfa']:
+for school in ['cas', 'cfa']:
     print('scraping courses for school', school)
 
     school_dir_path = DATA_DIR + os.sep + school
