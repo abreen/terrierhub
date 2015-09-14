@@ -1,0 +1,10 @@
+<h1>{{ school.name }}</h1>
+
+{% if departments %}
+<h2>Departments</h2>
+<ul>
+{% for dept in departments %}
+    <li><a href="{% url 'department' school.symbol|lower dept.symbol|lower %}">{{ dept.name }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}

@@ -6,7 +6,7 @@ from .models import School, Department, Course
 # Create your views here.
 
 def index(request):
-    return HttpResponse('Hello.')
+    return render(request, 'coursedb/index.html')
 
 def school(request, school):
     try:
@@ -14,7 +14,10 @@ def school(request, school):
     except:
         raise Http404("School does not exist")
 
-    return HttpResponse(str(s))
+    departments_here = Department.objects.filter(school=s)
+
+    context = {'school': s, 'departments': departments_here}
+    return render(request, 'coursedb/school.html', context)
 
 def department(request, school, dept):
     try:
@@ -27,7 +30,10 @@ def department(request, school, dept):
     except:
         raise Http404("Department does not exist")
 
-    return HttpResponse(str(d))
+    courses_here = Course.objects.filter(department=d)
+
+    context = {'school': s, 'department': d, 'courses': courses_here}
+    return render(request, 'coursedb/department.html', context)
 
 def course(request, school, dept, num):
     try:
@@ -45,4 +51,5 @@ def course(request, school, dept, num):
     except:
         raise Http404("Course does not exist")
 
-    return HttpResponse(str(c))
+    context = {'school': s, 'department': d, 'course': c}
+    return render(request, 'coursedb/course.html', context)
