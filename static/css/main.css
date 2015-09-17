@@ -1,0 +1,420 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,400italic,500,500italic,700|Roboto+Slab);
+
+@viewport {
+    zoom: 1.0;
+    width: extend-to-zoom;
+}
+
+@-ms-viewport {
+    width: extend-to-zoom;
+    zoom: 1.0;
+}
+
+.clearfix {
+    overflow: auto;
+    zoom: 1;
+}
+
+html {
+    font-size: 100%;
+}
+
+body {
+    color: #222;
+    background-color: white;
+    font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.3;
+}
+
+::selection {
+    background: #a39bed;
+    color: white;
+}
+
+::-moz-selection {
+    background: #90a4ae;
+    color: white;
+}
+
+a {
+    color: #0288d1;
+    text-decoration: none;
+}
+
+a:hover {
+    border-bottom: 1px solid #0288d1;
+}
+
+a:visited {
+    color: #7772cc;
+}
+
+a:visited:hover {
+    border-bottom-color: #7772cc;
+}
+
+/* anchors with this style look like buttons */
+a.js, a.button {
+    display: inline-block;
+    color: #eee;
+    background-color: #888;
+    padding: 0.5em 0.6em;
+}
+
+a.js:hover, a.button:hover {
+    color: white;
+    border-bottom: none;
+    cursor: pointer;
+}
+
+strong, b {
+    font-weight: 500;
+}
+
+a strong, a b, strong a, b a {
+    color: royalblue;
+}
+
+tt, pre, .pre, code {
+    font-size: 0.9em;
+    font-family: 'Lucida Console', Monaco, 'Courier New', monospace;
+}
+
+img {
+    max-width: 100%;
+}
+
+.nav, .subnav {
+    color: #fff;
+    width: 100%;
+}
+
+.nav {
+    background-color: #a39bed;
+}
+
+.subnav .module-logo {
+    float: left;
+    padding: 0.5em;
+}
+
+.subnav {
+    font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: 500;
+    background-color: #1acce4;
+}
+
+.subnav ul {
+    list-style-type: none;
+    margin: 0.5em;
+    padding: 0;
+    display: block;
+}
+
+.subnav li {
+    text-transform: none;
+    font-weight: normal;
+    margin-right: 1em;
+}
+
+.subnav li:first-child {
+    margin-right: 0.5em;
+}
+
+.subnav a, .subnav a:visited {
+    color: #fff;
+}
+
+.subnav a:hover {
+    color: #eee;
+    border-bottom: none;
+}
+
+.subnav.db {
+    background-color: #44bce4;
+}
+
+.nav .logo {
+    color: #fff;
+    font-size: 1.2em;
+    margin: 0.5em;
+}
+
+.nav .logo .at {
+    color: #ccc;
+}
+
+.nav .logo .school {
+    color: #c00;
+}
+
+.logo {
+    font-family: 'Roboto Slab', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.logo .at {
+
+}
+
+.logo .school {
+    font-weight: 700;
+}
+
+.footer {
+    padding: 2em;
+    text-align: center;
+    color: #c3c3c3;
+}
+
+.footer a, .footer a:visited {
+    color: #aaa;
+}
+
+.footer a:hover, .footer a:visited:hover {
+    border-bottom-color: #aaa;
+}
+
+.content {
+    padding: 2em;
+    padding-top: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: 700;
+    color: #a39bed;
+}
+
+h2 {
+    color: #888;
+    font-size: 1.8em;
+}
+
+h3 {
+    font-size: 1.4em;
+    font-weight: 500;
+    color: #333;
+}
+
+pre {
+    background-color: #fafafa;
+    color: #000;
+    line-height: 1.4;
+    padding: 1em;
+    overflow: auto;
+}
+
+blockquote {
+    margin: 1em 0;
+    padding: 1em;
+    overflow: auto;
+    background-color: #edeafa;
+    color: #533b6c;
+}
+
+blockquote p:first-child {
+    margin-top: 0;
+}
+
+blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+ul, ol {
+    margin: 1em 0;
+    text-align: left;
+    padding-left: 1.8em;
+}
+
+ul {
+    list-style-type: square;
+}
+
+ul ul {
+    list-style-type: disc;
+}
+
+ul ul ul {
+    list-style-type: circle;
+}
+
+ol {
+    list-style-type: decimal;
+}
+
+ol ol {
+    list-style-type: lower-alpha;
+}
+
+ol ol ol {
+    list-style-type: lower-roman;
+}
+
+ul li {
+    margin-bottom: 0.2em;
+}
+
+ol li {
+    margin-bottom: 0.5em;
+}
+
+dt {
+    font-weight: 500;
+}
+
+dl dt {
+    margin-top: 1em;
+}
+
+dd p:first-of-type {
+    margin-top: 0;
+}
+
+dd ul, dd ol {
+    margin: 0;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 2em 0;
+}
+
+table td, table th {
+    padding: 0.5em 0.8em;
+}
+
+table td {
+    vertical-align: top;
+}
+
+table th {
+    text-align: left;
+    font-weight: 500;
+    background-color: #666;
+    color: white;
+}
+
+table p {
+    margin: 0;
+}
+
+table tbody tr:nth-child(2n) {
+    background-color: #f9f9f9;
+}
+
+table.invisible tr {
+    background-color: transparent !important;
+}
+
+td ul, td ol {
+    margin: 0;
+}
+
+figure {
+    padding: 1em;
+}
+
+figure.center {
+    text-align: center;
+}
+
+caption, figcaption {
+    font-size: smaller;
+}
+
+caption:last-child, figcaption:last-child {
+    border-top: 1pt solid #ccc;
+    margin-top: 1em;
+    padding-top: 1em;
+}
+
+hr {
+    border: 0;
+    width: 100%;
+    color: #e1e1e1;
+    background-color: #e1e1e1;
+    height: 2pt;
+    margin-top: 3em;
+}
+
+form input[type="text"], form input[type="password"],
+form input[type="file"],
+form select, form textarea {
+    padding: 0.5em;
+    font-size: 1em;
+}
+
+form input[type="text"], form input[type="password"] {
+    border: 2pt solid #eee;
+}
+
+form input[type="submit"] {
+    font-size: 1em;
+}
+
+form textarea {
+    resize: none;
+    width: 30em;
+    height: 15em;
+    border: 2pt solid #eee;
+
+    /* note: same as tt style */
+    font-size: 0.9em;
+    font-family: 'Lucida Console', Monaco, monospace;
+}
+
+@media screen and (min-width: 660px) {
+    .nav li, .subnav li {
+        float: right;
+    }
+}
+
+@media print {
+    .nav, .subnav, .footer {
+        display: none;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: gray;
+    }
+
+    h1 {
+        color: black;
+    }
+
+    h2 {
+        page-break-before: always;
+    }
+
+    h1 + h2 {
+        page-break-before: avoid;
+    }
+
+    a, a:visited {
+        color: blue;
+        text-decoration: underline;
+        border: none;
+    }
+
+    table {
+        color: black;
+        border: 1pt solid black;
+    }
+
+    tr, td, th {
+        border: 1pt solid black;
+    }
+
+    th {
+        color: black !important;
+        font-weight: normal;
+    }
+}

@@ -1,3 +1,6 @@
+{% extends 'coursedb/base.html' %}
+
+{% block content %}
 <h1>{{ department.name }}</h1>
 <p>{{ school.name }}</p>
 
@@ -9,3 +12,4 @@
 {% endfor %}
 </ul>
 {% endif %}
+{% endblock %}

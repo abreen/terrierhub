@@ -1,3 +1,6 @@
+{% extends 'coursedb/base.html' %}
+
+{% block content %}
 <h1>{{ school.name }}</h1>
 
 {% if departments %}
@@ -8,3 +11,4 @@
 {% endfor %}
 </ul>
 {% endif %}
+{% endblock %}
