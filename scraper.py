@@ -7,7 +7,6 @@ import os
 import http.client
 import html5lib             # https://github.com/html5lib/html5lib-python
 import re
-import time
 
 
 PATTERN = r'(CAS|CFA|CGS|COM|ENG|EOP|FRA|GMS|GRS|GSM|LAW|MED|MET|OTP|PDP|SAR|SDM|SED|SHA|SMG|SPH|SSW|STH|UNI|XAS|XRG)\s+([A-Z]+)\s+(\d+)(?:: (.+))?'
@@ -16,9 +15,9 @@ SCHOOLS = ['cas', 'cfa', 'cgs', 'com', 'eng', 'gms', 'grs', 'law', 'sar', 'sdm',
 COURSES_HOST = 'www.bu.edu'
 COURSES_URL = '/academics/{}/courses/'
 DATA_DIR = 'rawdata'
+NS = {'html': 'http://www.w3.org/1999/xhtml'}
 
 pat = re.compile(PATTERN)
-ns = {'html': 'http://www.w3.org/1999/xhtml'}
 
 conn = http.client.HTTPConnection(COURSES_HOST)
 
@@ -41,7 +40,7 @@ for school in ['cas', 'cfa']:
     doc = html5lib.parse(resp_str)
 
     # get page limit (the <a> element) & set up loop
-    lim = doc.find('.//html:div[@class="pagination"]/html:span[last()]/html:a', ns)
+    lim = doc.find('.//html:div[@class="pagination"]/html:span[last()]/html:a', NS)
     if lim is None:
         print('error: cannot find page limit for', school)
         continue
@@ -64,14 +63,14 @@ for school in ['cas', 'cfa']:
 
         doc = html5lib.parse(resp_str)
 
-        ul = doc.find('.//html:ul[@class="course-feed"]', ns)
+        ul = doc.find('.//html:ul[@class="course-feed"]', NS)
 
         if ul is None:
             print('invalid HTML in response for', school, page)
             continue
 
-        for li in ul.findall('html:li', ns):
-            strong = li.find('html:a/html:strong', ns)
+        for li in ul.findall('./html:li', NS):
+            strong = li.find('./html:a/html:strong', NS)
             title = strong.text
 
             matches = pat.match(title)
@@ -87,10 +86,10 @@ for school in ['cas', 'cfa']:
 
             name = name.strip()
 
-            span = li.find('html:span', ns)
+            span = li.find('./html:span', NS)
             note = span.text if span is not None else ''
 
-            br = li.findall('html:br', ns)[-1]
+            br = li.findall('./html:br', NS)[-1]
             desc = br.tail.strip()
 
             line = "{}\t{}\t{}\t{}\t{}\t{}".format(
