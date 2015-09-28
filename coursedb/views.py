@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import Http404, HttpResponse
 
 from .models import School, Department, Course
+from .deep_scraper import scrape
 
-# Create your views here.
 
 def index(request):
     return render(request, 'coursedb/index.html')
@@ -51,5 +51,11 @@ def course(request, school, dept, num):
     except:
         raise Http404("Course does not exist")
 
-    context = {'school': s, 'department': d, 'course': c}
+    course_str = c.department.school.symbol.lower() + \
+                 c.department.symbol.lower() + \
+                 str(c.number)
+
+    scraped = scrape(course_str)
+
+    context = {'school': s, 'department': d, 'course': c, 'sections': scraped}
     return render(request, 'coursedb/course.html', context)

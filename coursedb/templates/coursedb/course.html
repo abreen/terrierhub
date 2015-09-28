@@ -3,4 +3,45 @@
 {% block content %}
 <h1>{{ course.title }}</h1>
 <p>{{ department.name }}, {{ school.name }}</p>
+<p class="note">{{ course.note }}</p>
+<p>{{ course.description }}</p>
+
+<table class="sections">
+    <tr>
+        <th>Section</th>
+        <th>Type</th>
+        <th>Instructor</th>
+        <th>Open seats</th>
+        <th>Meetings</th>
+    </tr>
+{% for section in sections %}
+    <tr>
+        <td>{{ section.section }}</td>
+        <td>{{ section.type }}</td>
+        <td>{{ section.instructor }}</td>
+        {% if section.open_seats %}
+        <td>{{ section.open_seats }}</td>
+        {% else %}
+        <td>Unknown</td>
+        {% endif %}
+        <td>
+            <table class="meetings">
+                <tr>
+                    <th>Time</th>
+                    <th>Location</th>
+                    <th>Dates</th>
+                </tr>
+            {% for meeting in section.meetings %}
+                <tr>
+                    <td>{{ meeting.time }}</td>
+                    <td>{{ meeting.location }}</td>
+                    <td>{{ meeting.dates }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </td>
+    </tr>
+{% endfor %}
+</table>
+
 {% endblock %}
