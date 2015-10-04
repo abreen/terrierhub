@@ -18,12 +18,19 @@
     <tr>
         <td>{{ section.section }}</td>
         <td>{{ section.type }}</td>
+
+        {% if section.instructor %}
         <td>{{ section.instructor }}</td>
+        {% else %}
+        <td>Unknown</td>
+        {% endif %}
+
         {% if section.open_seats %}
         <td>{{ section.open_seats }}</td>
         {% else %}
         <td>Unknown</td>
         {% endif %}
+
         <td>
             <table class="meetings">
                 <tr>

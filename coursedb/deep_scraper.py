@@ -104,7 +104,9 @@ def scrape(course_str):
                 # makes
 
                 # parse instructor
-                result_row['instructor'] = tds[2].text.strip()
+                instructor_name = tds[2].text
+                if instructor_name is not None:
+                    result_row['instructor'] = instructor_name.strip()
 
                 # parse section type (e.g., 'LEC' or 'LAB')
                 result_row['type'] = tds[3].text.strip()
