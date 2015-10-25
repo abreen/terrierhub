@@ -57,5 +57,13 @@ def course(request, school, dept, num):
 
     scraped = scrape(course_str)
 
-    context = {'school': s, 'department': d, 'course': c, 'sections': scraped}
+    try:
+        l = Location.objects.get(symbol=s.symbol)
+    except: # no location with that symbol
+        l = None
+        pass
+
+    context = {'school': s, 'department': d, 'course': c,
+               'sections': scraped, 'location': l}
+
     return render(request, 'coursedb/course.html', context)

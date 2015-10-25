@@ -29,3 +29,15 @@ class Course(models.Model):
             self.department.school.symbol, self.department.symbol,
             str(self.number), self.title
         )
+
+class Location(models.Model):
+    symbol = models.CharField(max_length=16)            # e.g., "CAS", "KHC"
+    address = models.CharField(max_length=255)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    def __str__(self):
+        return '{} ({}, {})'.format(
+            self.symbol, self.latitude, self.longitude
+        )
+
