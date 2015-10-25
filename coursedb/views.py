@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponse
 
-from .models import School, Department, Course
+from .models import School, Department, Course, Location
 from .deep_scraper import scrape
 
 
