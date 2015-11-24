@@ -64,6 +64,25 @@ def course(request, school, dept, num):
         pass
 
     context = {'school': s, 'department': d, 'course': c,
-               'sections': scraped, 'location': l}
+               'sections': scraped, 'location': l,
+               'courses_added': request.session['courses']}
 
     return render(request, 'coursedb/course.html', context)
+
+def api(request, function):
+    if function == 'add_course':
+        to_add = request.GET['course_to_add']
+        current_courses = request.session['courses']
+        
+        if 'courses' not in request.session:
+            request.session['courses'] = [to_add]
+        elif to_add not in current_courses:
+            current_courses.append(to_add)
+            # editing current_courses in-place doesn't seem to work
+            # instead, we set the reference here
+            request.session['courses'] = current_courses
+    
+    elif function == 'clear_courses':
+        request.session['courses'] = []
+        
+    return HttpResponse('')
