@@ -223,8 +223,11 @@ def scrape(c):
 
             # location
 
-            building_str, room = location_str.split(' ')
-            building = Location.objects.get(symbol=building_str)
+            try:
+                building_str, room = location_str.split(' ')
+                building = Location.objects.get(symbol=building_str)
+            except ValueError:
+                building, room = None, None
 
             # meeting days & time
 
@@ -246,11 +249,15 @@ def scrape(c):
             start_min = int(start_min_str)
             if start_ampm.lower() == 'pm':
                 start_hour += 12
+                if start_hour == 24:
+                    start_hour = 12
 
             end_hour = int(end_hour_str)
             end_min = int(end_min_str)
             if end_ampm.lower() == 'pm':
                 end_hour += 12
+                if end_hour == 24:
+                    end_hour = 12
 
             start = datetime.time(start_hour, start_min, 0)
             end = datetime.time(end_hour, end_min, 0)

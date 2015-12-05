@@ -118,8 +118,8 @@ class Meeting(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
 
-    building = models.ForeignKey(Location)
-    room = models.CharField(max_length=40)
+    building = models.ForeignKey(Location, null=True)
+    room = models.CharField(max_length=40, null=True)
 
     def __str__(self):
         return '{} {}, {} {}-{} (for section {})'.format(
