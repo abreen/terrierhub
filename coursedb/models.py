@@ -53,20 +53,27 @@ class Section(models.Model):
     )
 
     def type_from_int(i):
-        return INSTRUCTION_TYPES[i]
+        return Section.INSTRUCTION_TYPES[i]
+
+    def type_to_int(symbol):
+        for s, i, _ in Section.INSTRUCTION_TYPES:
+            if s == symbol:
+                return i
+
+        raise ValueError('invalid instruction type symbol')
 
     course = models.ForeignKey(Course)
     section = models.CharField(max_length=40)               # e.g., 'A2'
-    open_seats = models.IntegerField('open seats')
+    open_seats = models.IntegerField('open seats', null=True)
     instructor = models.CharField('instructor', max_length=200)
     type = models.IntegerField(choices=tuple([(t[1], t[2]) for t in INSTRUCTION_TYPES]))
-    notes = models.CharField(max_length=600)
+    notes = models.CharField(default='', blank=True, max_length=600)
+
+    start = models.DateField()
+    end = models.DateField()
 
     def __str__(self):
-        return '{} {} {} {}'.format(
-            self.department.school.symbol, self.department.symbol,
-            str(self.number), self.section
-        )
+        return str(self.course) + ' ' + self.section
 
 class Meeting(models.Model):
     DAYS = (
@@ -99,17 +106,24 @@ class Meeting(models.Model):
 
         return days
 
+    def days_as_string(self):
+        return ''.join(Meeting.days_from_int(self.days))
+
     section = models.ForeignKey(Section)
     days = models.IntegerField()
+
     start = models.TimeField()
     end = models.TimeField()
+
+    start_date = models.DateField()
+    end_date = models.DateField()
 
     building = models.ForeignKey(Location)
     room = models.CharField(max_length=40)
 
     def __str__(self):
-        return '{} {}, {} {}-{}'.format(
+        return '{} {}, {} {}-{} (for section {})'.format(
             str(self.building), self.room,
             ''.join(Meeting.days_from_int(self.days)),
-            str(self.start), str(self.end)
+            str(self.start), str(self.end), str(self.section)
         )

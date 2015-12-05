@@ -5,6 +5,9 @@ from urllib.parse import quote_plus
 import json
 import html5lib             # https://github.com/html5lib/html5lib-python
 import re
+import datetime
+
+from .models import Section, Meeting, Location
 
 
 #
@@ -35,7 +38,11 @@ def empty_result_row():
 def sections_to_php_get(sections):
     return '&'.join(['sections[]=' + quote_plus(s) for s in sections])
 
-def scrape(course_str):
+def scrape(c):
+    course_str = c.department.school.symbol.lower() + \
+                     c.department.symbol.lower() + \
+                     str(c.number)
+
     conn = http.client.HTTPConnection(HOST)
 
     conn.request('GET', URL.format(course_str))
@@ -168,13 +175,120 @@ def scrape(course_str):
 
     if not seats:
         error('could not get open seats numbers')
-        return results
 
-    for section_id, open_seats in seats.items():
-        if section_id not in section_ids:
-            continue
+    else:
+        for section_id, open_seats in seats.items():
+            if section_id not in section_ids:
+                continue
 
-        open_seats = int(open_seats)
-        section_ids[section_id]['open_seats'] = open_seats
+            open_seats = int(open_seats)
+            section_ids[section_id]['open_seats'] = open_seats
 
-    return results
+    # all data parsed into dictionaries: now create model instances
+
+    now_year = datetime.date.today().year
+    sections = []
+
+    for s in results:
+        meetings = []
+
+        for m in s['meetings']:
+            dates_str = m['dates']                  # e.g., '09/14-12/07'
+            location_str = m['location']            # e.g., 'EPC 207'
+            time_str = m['time']                    # e.g., 'TR 5:00 pm-6:30 pm'
+
+            # valid span of dates
+
+            start_str, end_str = dates_str.split('-')
+
+            start_mon_str, start_day_str = start_str.split('/')
+            start_mon, start_day = int(start_mon_str), int(start_day_str)
+
+            end_mon_str, end_day_str = end_str.split('/')
+            end_mon, end_day = int(end_mon_str), int(end_day_str)
+
+            # TODO need a better way to guess the year
+            if 1 <= start_mon < 9:
+                start_year = now_year + 1
+            else:
+                start_year = now_year
+
+            if 1 <= end_mon < 9:
+                end_year = now_year + 1
+            else:
+                end_year = now_year
+
+            starting = datetime.date(month=start_mon, day=start_day, year=start_year)
+            ending = datetime.date(month=end_mon, day=end_day, year=end_year)
+
+            # location
+
+            building_str, room = location_str.split(' ')
+            building = Location.objects.get(symbol=building_str)
+
+            # meeting days & time
+
+            time_parts = time_str.split(' ')
+            days_str, time_parts = time_parts[0], time_parts[1:]
+
+            days_list = list(days_str)
+
+            time_str = ' '.join(time_parts)
+            start_time_str, end_time_str = time_str.split('-')
+
+            start_time_str, start_ampm = start_time_str.split(' ')
+            end_time_str, end_ampm = end_time_str.split(' ')
+
+            start_hour_str, start_min_str = start_time_str.split(':')
+            end_hour_str, end_min_str = end_time_str.split(':')
+
+            start_hour = int(start_hour_str)
+            start_min = int(start_min_str)
+            if start_ampm.lower() == 'pm':
+                start_hour += 12
+
+            end_hour = int(end_hour_str)
+            end_min = int(end_min_str)
+            if end_ampm.lower() == 'pm':
+                end_hour += 12
+
+            start = datetime.time(start_hour, start_min, 0)
+            end = datetime.time(end_hour, end_min, 0)
+
+            meeting = Meeting(
+                days=Meeting.days_to_int(days_list),
+                start=start,
+                end=end,
+                start_date=starting,
+                end_date=ending,
+                building=building,
+                room=room
+            )
+
+            meetings.append(meeting)
+
+        # done adding meetings
+
+        # use the first meeting as the valid starting/ending date for
+        # the entire section
+        # TODO there should be a better way to do this
+
+        first_meeting = meetings[0]
+
+        section = Section(
+            course=c,
+            section=s['section'],
+            open_seats=s['open_seats'],
+            instructor=s['instructor'],
+            type=Section.type_to_int(s['type']),
+            notes=s['notes'] if s['notes'] is not None else '',
+            start=first_meeting.start_date,
+            end=first_meeting.end_date
+        )
+
+        for m in meetings:
+            m.section = section
+
+        sections.append([section, meetings])
+
+    return sections
