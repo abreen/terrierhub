@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-urlpatterns = [
-    url(r'^db/', include('coursedb.urls')),
-    url(r'^admin/', include(admin.site.urls)),
-]
+from coursedb import urls
+
+urlpatterns = urls.urlpatterns
