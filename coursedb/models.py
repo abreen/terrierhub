@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 class School(models.Model):
     symbol = models.CharField(max_length=3)
     name = models.CharField(max_length=60)
@@ -41,3 +39,28 @@ class Location(models.Model):
             self.symbol, self.latitude, self.longitude
         )
 
+class Section(models.Model):
+    INSTRUCTION_TYPES = (
+        ('APP', 0, 'applied art'),
+        ('DIS', 1, 'discussion section'),
+        ('DRS', 2, 'directed study'),
+        ('EXP', 3, 'clinical experience'),
+        ('IND', 4, 'independent course'),
+        ('LAB', 5, 'laboratory'),
+        ('LEC', 6, 'lecture'),
+        ('OTH', 7, 'other'),
+        ('PLB', 8, 'pre-lab section')
+    )
+
+    course = models.ForeignKey(Course)
+    section = models.CharField(max_length=40)               # e.g., 'A2'
+    open_seats = models.IntegerField('open seats')
+    instructor = models.CharField('instructor', max_length=200)
+    type = models.IntegerField(choices=tuple([(t[1], t[2]) for t in INSTRUCTION_TYPES]))
+    notes = models.CharField(max_length=600)
+
+    def __str__(self):
+        return '{} {} {} {}'.format(
+            self.department.school.symbol, self.department.symbol,
+            str(self.number), self.section
+        )
