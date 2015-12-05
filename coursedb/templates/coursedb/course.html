@@ -25,29 +25,23 @@ google.maps.event.addDomListener(window, 'load', init_map);
 </script>
 
 <script>
-function add_course(str) {
+function add_course(school, dept, num, sec) {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/db/api/add_course?course_to_add=" + str, true);
+    xhttp.open("GET",
+        "/db/api/add_course?school=" + school +
+        "&department=" + dept +
+        "&number=" + num +
+        "&section=" + sec
+    , true);
     xhttp.send();
-  
-    alert('Added ' + str);
 }
 
 function clear_course() {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "/db/api/clear_courses", true);
     xhttp.send();
-  
-    alert('Cleared courses');
 }
 </script>
-
-<input
-    type="button"
-    id="add"
-    onclick="add_course('{{ school.symbol }}{{ department.symbol }}{{ course.number }}');"
-    value="Add Courses"
->
 
 <input
     type="button"
@@ -64,6 +58,7 @@ function clear_course() {
 
 <table class="sections">
     <tr>
+        <th></th>
         <th>Section</th>
         <th>Type</th>
         <th>Instructor</th>
@@ -72,6 +67,15 @@ function clear_course() {
     </tr>
 {% for section in sections %}
     <tr>
+
+        <td>
+<input
+    type="button"
+    id="add"
+    onclick="add_course('{{ school.symbol }}', '{{ department.symbol }}', '{{ course.number }}', '{{ section.section }}');"
+    value="Add"
+>
+</td>
         <td>{{ section.section }}</td>
         <td>{{ section.type }}</td>
 

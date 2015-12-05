@@ -103,7 +103,12 @@ def course(request, school, dept, num):
 
 def api(request, function):
     if function == 'add_course':
-        to_add = request.GET['course_to_add']
+        to_add = {
+            'school': request.GET['school'],
+            'department': request.GET['department'],
+            'number': request.GET['number'],
+            'section': request.GET['section']
+        }
 
         if 'courses' not in request.session:
             request.session['courses'] = [to_add]
