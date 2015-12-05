@@ -128,3 +128,7 @@ def api(request, function):
         return HttpResponse('invalid API function')
 
     return HttpResponse('')
+
+def schedule(request):
+    return render(request, 'coursedb/schedule.html', {})
+
