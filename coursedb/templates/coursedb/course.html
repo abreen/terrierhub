@@ -74,7 +74,6 @@ function clear_course() {
     <tr>
         <td>{{ section.section }}</td>
         <td>{{ section.type }}</td>
-       
 
         {% if section.instructor %}
         <td>{{ section.instructor }}</td>
@@ -91,15 +90,15 @@ function clear_course() {
         <td>
             <table class="meetings">
                 <tr>
+                    <th>Days</th>
                     <th>Time</th>
                     <th>Location</th>
-                    <th>Dates</th>
                 </tr>
             {% for meeting in section.meetings %}
                 <tr>
-                    <td>{{ meeting.time }}</td>
-                    <td>{{ meeting.location }}</td>
-                    <td>{{ meeting.dates }}</td>
+                    <td>{{ meeting.days_as_string }}</td>
+                    <td>{{ meeting.start }}&ndash;{{ meeting.end }}</td>
+                    <td>{{ meeting.building.symbol }} {{ meeting.room }}</td>
                 </tr>
             {% endfor %}
             </table>

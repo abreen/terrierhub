@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponse
 
-from .models import School, Department, Course, Location
+from .models import School, Department, Course, Location, Section, Meeting
 from .deep_scraper import scrape
 
 
@@ -51,11 +51,36 @@ def course(request, school, dept, num):
     except:
         raise Http404("Course does not exist")
 
-    course_str = c.department.school.symbol.lower() + \
-                 c.department.symbol.lower() + \
-                 str(c.number)
+    sections = scrape(c)
 
-    scraped = scrape(course_str)
+    for section, meetings in sections:
+        # if this section already exists in the database, find it and
+        # update it
+        old_section = Section.objects.filter(
+            course=section.course,
+            section=section.section,
+            start=section.start,
+            end=section.end
+        )
+
+        if old_section:
+            # drop all existing meetings
+            old_meetings = Meeting.objects.filter(section=old_section)
+            for m in old_meetings:
+                m.delete()
+
+            old_section.delete()
+
+        section.save()
+
+        for m in meetings:
+            m.section = section
+            m.save()
+
+    sections_only = []
+    for section, meetings in sections:
+        section.meetings = meetings
+        sections_only.append(section)
 
     try:
         l = Location.objects.get(symbol=s.symbol)
@@ -67,7 +92,7 @@ def course(request, school, dept, num):
         'school': s,
         'department': d,
         'course': c,
-        'sections': scraped,
+        'sections': sections_only,
         'location': l,
 
         # using get() here with a default value
