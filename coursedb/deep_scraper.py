@@ -166,8 +166,9 @@ def scrape(course_str):
     resp_json = json.loads(resp_str)
     seats = resp_json['results']
 
-    if len(seats) == 0:
+    if not seats:
         error('could not get open seats numbers')
+        return results
 
     for section_id, open_seats in seats.items():
         if section_id not in section_ids:
