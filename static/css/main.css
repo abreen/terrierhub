@@ -29,7 +29,7 @@ body {
 }
 
 ::selection {
-    background: #a39bed;;
+    background: #a39bed;
     color: #f2f2f2;
 }
 
@@ -166,7 +166,7 @@ img {
 .footer {
     padding: 2em;
     text-align: center;
-    color: #c3c3c3;
+    color: #c3c3c3;   
 }
 
 .footer a, .footer a:visited {
@@ -195,6 +195,7 @@ h1 {
 h2 {
     color: #888;
     font-size: 1.8em;
+    text-align:center;
 }
 
 h3 {
@@ -351,14 +352,40 @@ form select, form textarea {
     font-size: 1em;
 }
 
-form input[type="text"], form input[type="password"] {
+form nput[type="text"], form input[type="password"] {
     border: 2pt solid #eee;
 }
 
 form input[type="submit"] {
     font-size: 1em;
 }
+#canvas{
+    float: left;
+    margin-top: 1.5%;
+    margin-left: 10%;
+    margin-right: 15%;
+    width: 700px;
+}
+#reminders {
+    position: fixed;
+    float: right;
+    left: 900px;
+    bottom: 20%;
+    margin-right: 10%;
+    margin-left: 5%;
 
+}
+#classes {
+    width: 700px;
+    height: 150px;
+    border: 1px solid black;
+    font-size: 25px;
+    overflow:scroll;
+    float: left;
+    margin-top: 1.5%;
+    margin-left: 10%;
+    
+}
 form textarea {
     resize: none;
     width: 30em;

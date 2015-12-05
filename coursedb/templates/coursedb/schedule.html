@@ -1,0 +1,469 @@
+{% extends 'coursedb/base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+// cheat sheet
+//to get the text and background of the canvas you need to set them twice
+//a=a.splice(1,2)//((position to remove),(items you want to remove)) removed items are kept in a
+var colors = ['indigo', 'darkblue', 'pink', 'purple', 'palevioletred', 'aquamarine', 'turquoise', 'teal', 'darkorchid', 'coral', 'aqua', 'salmon', 'orchid', 'forestgreen', 'cornflowerblue', 'plum', 'darkmagenta', 'darkslateblue', 'deepskyblue', 'firebrick'];
+var index = -1;
+var classes = [];
+var mon = [];
+var tues = [];
+var wed = [];
+var thur = [];
+var fri = [];
+
+function myClick(checkboxID,days,classStart,classTime,className){
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	var el = document.getElementById(checkboxID)
+	var i;
+
+	if (el.checked){
+		addClassToSched(days,classStart,classTime,className)
+		//addClassToSched([1,3],12,120,"CAS")
+	} else {
+		removeClassFromSched(days,classStart,classTime, className)
+	}
+
+	
+
+	/*mon.forEach(function (item, index, array) {
+	  console.log(item, index);
+	});	
+	tues.forEach(function (item, index, array) {
+	  console.log(item, index);
+	});
+	wed.forEach(function (item, index, array) {
+	  console.log(item, index);
+	});	
+	fri.forEach(function (item, index, array) {
+	  console.log(item, index);
+	});	*/
+};
+
+function drawGraph(){
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	ctx.strokeStyle = 'black';
+	for (i=0;i<5;i++){
+		ctx.beginPath(); 
+		ctx.moveTo((c.width/5)*i,0);
+		ctx.lineTo((c.width/5)*i,c.height);
+		ctx.lineWidth = .3;
+		ctx.stroke();
+	}//draws the vertical lines on the schedule
+	
+	for (i = 0; i <16; i++) {
+		ctx.beginPath(); 
+		ctx.moveTo(0,(40*i));
+		ctx.lineTo((c.width),(40*i));	
+		ctx.lineWidth = .3;
+		ctx.stroke();
+	}//draws the horizontal lines on the graph
+}
+
+function addClassToSched(days,classStart,classTime,className) {
+	//check if theres already something there 
+	//calculate the numbers to make a rectangle
+	//if theres nothing make rectangle else
+	//add the rectangle to whats there
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");	
+	var x,y,w,h,i;
+	var temp = [];
+
+	y = ((((classStart - 7)*60)/15)*10)
+	w = (c.width)/5
+	h = (classTime/15)*10
+
+	if (index<colors.length-1){
+		index = index+1;
+	}else{
+		index = 0
+	}
+	console.log(colors[index])
+	for (i = 0; i< days.length; i++){ 
+		x = (c.width/5)*days[i]
+		ctx.fillStyle = colors[index];//select color from array
+
+		ctx.fillRect(x+2,y+2,w-4,h-4);	
+		
+		if (timeConflict(days[i],y,h,false,className) == true){
+			//if theres a conflict need to go and draw overlapping lines
+
+		}
+		else{
+			ctx.fillStyle = 'white';
+			ctx.fillText(className,x+10,y+10);
+		}
+
+		addToArray(days[i],y,h,colors[index],className) //add coords to correct array
+	}
+
+};
+function drawConflict(i,y,h,color){
+	var w,x;
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");	
+
+	x = (c.width/5)*i
+	w = (c.width)/5
+
+	for (i=0;i<14;i++){
+		ctx.beginPath();
+		ctx.moveTo(x+i*10+4,y+2);
+		ctx.lineTo(x+i*10+4,y+h-2);
+		ctx.lineWidth = 4;
+		ctx.strokeStyle = color
+		ctx.stroke();
+	}
+}
+function findConflict(x,y,h,y2,h2,color){
+	//goes through all the different type of conflicts
+	if (y == y2 && h == h2){
+	 	//the class is at the same time
+ 		console.log("time conflict")
+		drawConflict(x,y2,h2,color)
+		return true
+		
+	}
+	else if ((y<=y2)&&(h>=h2)) {
+		//starts before ends after
+		console.log("time conflict 2")
+		drawConflict(x,y2,h2,color)
+		return false
+	}
+	else if ((y<=y2) && (h<=h2)){
+		//starts before ends during
+		console.log("time conflict 3")
+		drawConflict(x,y2,h,color)
+		return false
+	}		
+	else if ((y>=y2) && ((y<=h2)||(h<=h2))) {
+		//starts during ends after
+		console.log("time conflict 4")
+		drawConflict(x,y,h,color)
+		return false
+	}
+	/*
+	else if ((y>=y2) && (h<=h2)){
+		//starts during ends during
+		console.log("time conflict 5")
+		drawConflict(x,y,h,color)
+		conflict = true
+	}*/
+	else if (y > h2){
+		return false
+		//the class doesn't start till after the saved class ends
+	}
+	return false
+
+}
+function timeConflict(x,y,h,remove,className){
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");	
+	var y2, h2, found,w;
+	var i,j;
+	w = (c.width)/5
+	switch (x) {
+	    case 0:
+	    	for (i = 0; i < mon.length; i++){
+	    		//console.log(mon[i])
+	    		//goes through all the classes on this day
+    			if (mon[i].length >= 3){
+    				y2 = mon[i][0]
+    				h2 = mon[i][1]
+    				color = mon[i][2]
+    				name = mon[i][3]
+    				found = findConflict(x,y,h,y2,h2,color) 
+    				if (found == true && remove == true){
+    					if (name == className){
+
+    						mon.splice(i,1)
+    					}
+    				}
+    			}
+	    	}
+	        break;
+	    case 1:
+	    	for (i = 0; i < tues.length; i++){
+	    		//goes through all the classes on this day
+	    		if (tues[i].length >= 3){
+    				y2 = tues[i][0]
+    				h2 = tues[i][1]
+    				color = tues[i][2]
+    				name = tues[i][3]
+    				found = findConflict(x,y,h,y2,h2,color)  	
+    				if (found == true && remove == true){
+    					if (name == className){
+    						console.log('name')
+    						console.log(name)
+    						console.log(className)
+    						tues.splice(i,1)
+    					}
+    				}				
+	    	}	    
+    	}
+	        break;
+	    case 2:
+	    	for (i = 0; i < wed.length; i++){
+	    		//goes through all the classes on this day
+	    		if (wed[i].length >= 3){
+    				y2 = wed[i][0]
+    				h2 = wed[i][1]
+    				color = wed[i][2]
+    				name = wed[i][3]  		
+    				found = findConflict(x,y,h,y2,h2,color) 
+    				if (found == true && remove == true){
+    					if (name == className){
+    						wed.splice(i,1)
+    					}
+    				}	
+    			}
+	    	}	    
+	        break;
+	    case 3:
+	    	for (i = 0; i < thur.length; i++){
+	    		//goes through all the classes on this day
+	    		if (thur[i].length >= 3){
+    				y2 = thur[i][0]
+    				h2 = thur[i][1]
+    				color = thur[i][2]	
+    				name = thur[i][3] 
+    				found = findConflict(x,y,h,y2,h2,color) 	
+    				if (found == true && remove == true){
+    					if (name ==className){
+    						thur.splice(i,1)
+    					}
+    				}
+    			}
+	    	}	    
+	        break;
+	    case 4:
+	    	for (i = 0; i < fri.length; i++){
+	    		//goes through all the classes on this day
+	    		if (fri[i].length >= 3){
+    				y2 = fri[i][0]
+    				h2 = fri[i][1]
+    				color = fri[i][2]
+    				name = fri[i][3] 
+    				found = findConflict(x,y,h,y2,h2,color) 
+    				if (found == true && remove == true){
+    					if (name == className){
+    						fri.splice(i,1)
+    					}
+    				} 	
+    			}
+	    	}	    
+	        break;
+	}
+
+}
+function addToArray(x,y,h,color,className){
+	//add the x,y,h, and color to an array based on the day the class is
+	switch (x) {
+	    case 0:
+	        mon.push([y,h,color,className])
+	        break;
+	    case 1:
+	        tues.push([y,h,color,className])
+	        break;
+	    case 2:
+	        wed.push([y,h,color,className])
+	        break;
+	    case 3:
+	        thur.push([y,h,color,className])
+	        break;
+	    case 4:
+	        fri.push([y,h,color,className])
+	        break;
+	}
+}
+
+function removeClassFromSched(days,classStart,classTime,className){
+	/*need to know the row and col that this class took up, then clear that color and any text,
+	we also need to know if there was a conflicting class being shown at that time too, because we need to keep that class there
+	we can pick a certain color that always means a conflicting class then  
+	//document.getElementById('sched').style.backgroundColor = "white";//sets entire color of table*/
+	var startY = 80;
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");	
+	var x,y,w,h,i;
+
+	y = ((((classStart - 7)*60)/15)*10)
+	w = (c.width)/5
+	h = (classTime/15)*10
+
+
+	for (i = 0; i< days.length; i++){ 
+		//console.log(i)
+		x = (c.width/5)*days[i]
+		timeConflict(days[i],y,h,true,className)
+		ctx.clearRect(x,y,w,h);
+		replaceClass(days[i],y,h,true)
+
+		//findSelfAndRemove(days[i],y,h,className)
+	}
+	
+	/*ctx.strokeStyle = 'black';
+	for (i = 0; i <16; i++) {
+		ctx.beginPath(); 
+		ctx.moveTo(0,(40*i));
+		ctx.lineTo((c.width),(40*i));	
+		ctx.lineWidth = 1;
+		ctx.stroke();
+	}*/
+	drawGraph()//leaves line because it redraws the graph here 
+					//but if it doesnt redraw it then some blocks will
+					//look stupid
+};
+function replaceClass(x,y,h,remove){
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");	
+	var y2, h2, found,w,name;
+	var i,j;
+	w = (c.width)/5
+	switch (x) {
+	    case 0:
+	    	for (i = 0; i < mon.length; i++){
+	    		//console.log(mon[i])
+	    		//goes through all the classes on this day
+    			if (mon[i].length >= 3){
+    				y2 = mon[i][0]
+    				h2 = mon[i][1]
+    				color = mon[i][2]
+    				name = mon[i][3] 
+    				drawRemovedClass(x,y,h,y2,h2,color,name) 
+    				//findConflict(x,y,h,y2,h2,color) 	
+    			}
+	    	}
+	        break;
+	    case 1:
+	    	for (i = 0; i < tues.length; i++){
+	    		//goes through all the classes on this day
+	    		if (tues[i].length >= 3){
+    				y2 = tues[i][0]
+    				h2 = tues[i][1]
+    				color = tues[i][2]
+    				name = tues[i][3] 
+    				drawRemovedClass(x,y,h,y2,h2,color,name) 		
+    				//findConflict(x,y,h,y2,h2,color) 		
+	    	}	    
+    	}
+	        break;
+	    case 2:
+	    	for (i = 0; i < wed.length; i++){
+	    		//goes through all the classes on this day
+	    		if (wed[i].length >= 3){
+    				y2 = wed[i][0]
+    				h2 = wed[i][1]
+    				color = wed[i][2]  
+    				name = wed[i][3] 		
+    				drawRemovedClass(x,y,h,y2,h2,color,name) 
+    				//findConflict(x,y,h,y2,h2,color) 	
+    			}
+	    	}	    
+	        break;
+	    case 3:
+	    	for (i = 0; i < thur.length; i++){
+	    		//goes through all the classes on this day
+	    		if (thur[i].length >= 3){
+    				y2 = thur[i][0]
+    				h2 = thur[i][1]
+    				color = thur[i][2]
+    				name = thur[i][3] 	
+    				drawRemovedClass(x,y,h,y2,h2,color,name) 
+    				//findConflict(x,y,h,y2,h2,color) 		
+    			}
+	    	}	    
+	        break;
+	    case 4:
+	    	for (i = 0; i < fri.length; i++){
+	    		//goes through all the classes on this day
+	    		if (fri[i].length >= 3){
+    				y2 = fri[i][0]
+    				h2 = fri[i][1]
+    				color = fri[i][2]
+    				name = fri[i][3] 
+    				console.log(name)
+    				drawRemovedClass(x,y,h,y2,h2,color,name)
+    				//findConflict(x,y,h,y2,h2,color) 	 
+    				
+    			}
+	    	}	    
+	        break;
+	}
+
+}
+function drawRemovedClass(x,y,h,y2,h2,color,className){
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");	
+	w = (c.width)/5 
+	console.log("time conflict 4")
+	ctx.fillStyle = color;//select color from array
+	ctx.fillRect((w*x)+2,y2+2,w-4,h2-4);
+	ctx.fillStyle = 'white';
+	ctx.fillText(className,(w*x)+10,y2+10);		
+}
+
+</script>
+</head>
+<body onload="drawGraph()">
+
+     <div id="canvas">
+	<h2>My Schedule</h2>
+
+		<canvas id="myCanvas" width="700" height="600"
+		style="border:1px solid #000000;">
+		</canvas>
+
+	</div>
+
+	<div id="reminders">
+		<table border="1" height="250px" width="250px">
+		  <tr >
+		    <td colspan ="2">Reminders for Fall 2015</td>
+		  </tr>
+			<tr>
+		    <td>Registration Starts:</td>
+		    <td>3/29/15</td>
+			</tr>
+			<tr>
+		    <td>Last Day to Drop Courses without a <q>W</q>:</td>
+		    <td> 10/7/15</td>
+		</tr>
+		<tr>
+		    <td>Last Day to Drop Courses with a <q>W</q>:</td>
+		    <td>11/6/15</td>
+		</tr>
+		</table>
+	</div>
+
+	<div id = "classes">
+    	<table border="0px" width="700" >
+	
+	{%if savedClasses%}
+	    {%for class in savedClasses%}
+		<td border="0px"><input type="checkbox" id={{class.rowid}} onclick="myClick({{class.rowid}},[{{class.daysarray}}],{{class.start}},{{class.mins}},{{class.name}})"></td>
+		<td>{{class.college}}</td> 
+		<td>{{class.name}}</td>
+		<td>{{class.sectio}}n</td>
+		<td>{{class.building}}</td>
+		<td>{{class.room}}</td> 
+		<td>{{class.days}}</td> 
+		<td>{{class.time}}</td>					
+	    {% endfor %}
+	{%endif %}
+	
+	</table>
+	</div>	
+</body>
+</html>
+
+{% endblock %}
