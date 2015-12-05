@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 class School(models.Model):
@@ -62,6 +64,32 @@ class Section(models.Model):
 
         raise ValueError('invalid instruction type symbol')
 
+    def startend_from_string(dates_str):
+        now_year = datetime.date.today().year
+        start_str, end_str = dates_str.split('-')
+
+        start_mon_str, start_day_str = start_str.split('/')
+        start_mon, start_day = int(start_mon_str), int(start_day_str)
+
+        end_mon_str, end_day_str = end_str.split('/')
+        end_mon, end_day = int(end_mon_str), int(end_day_str)
+
+        # TODO need a better way to guess the year
+        if 1 <= start_mon < 9:
+            start_year = now_year + 1
+        else:
+            start_year = now_year
+
+        if 1 <= end_mon < 9:
+            end_year = now_year + 1
+        else:
+            end_year = now_year
+
+        start = datetime.date(month=start_mon, day=start_day, year=start_year)
+        end = datetime.date(month=end_mon, day=end_day, year=end_year)
+
+        return start, end
+
     course = models.ForeignKey(Course)
     section = models.CharField(max_length=40)               # e.g., 'A2'
     open_seats = models.IntegerField('open seats', null=True)
@@ -71,6 +99,10 @@ class Section(models.Model):
 
     start = models.DateField()
     end = models.DateField()
+
+    def startend_str(self):
+        return str(self.start.month) + '/' + str(self.start.day) + '-' + \
+               str(self.end.month) + '/' + str(self.end.day)
 
     def __str__(self):
         return str(self.course) + ' ' + self.section

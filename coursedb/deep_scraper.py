@@ -186,7 +186,6 @@ def scrape(c):
 
     # all data parsed into dictionaries: now create model instances
 
-    now_year = datetime.date.today().year
     sections = []
 
     for s in results:
@@ -199,27 +198,7 @@ def scrape(c):
 
             # valid span of dates
 
-            start_str, end_str = dates_str.split('-')
-
-            start_mon_str, start_day_str = start_str.split('/')
-            start_mon, start_day = int(start_mon_str), int(start_day_str)
-
-            end_mon_str, end_day_str = end_str.split('/')
-            end_mon, end_day = int(end_mon_str), int(end_day_str)
-
-            # TODO need a better way to guess the year
-            if 1 <= start_mon < 9:
-                start_year = now_year + 1
-            else:
-                start_year = now_year
-
-            if 1 <= end_mon < 9:
-                end_year = now_year + 1
-            else:
-                end_year = now_year
-
-            starting = datetime.date(month=start_mon, day=start_day, year=start_year)
-            ending = datetime.date(month=end_mon, day=end_day, year=end_year)
+            starting, ending = Section.startend_from_string(dates_str)
 
             # location
 
