@@ -448,18 +448,24 @@ function drawRemovedClass(x,y,h,y2,h2,color,className){
 	<div id = "classes">
     	<table border="0px" width="700" >
 	
-	{%if savedClasses%}
-	    {%for class in savedClasses%}
-		<td border="0px"><input type="checkbox" id={{class.rowid}} onclick="myClick({{class.rowid}},[{{class.daysarray}}],{{class.start}},{{class.mins}},{{class.name}})"></td>
-		<td>{{class.college}}</td> 
-		<td>{{class.name}}</td>
-		<td>{{class.sectio}}n</td>
-		<td>{{class.building}}</td>
-		<td>{{class.room}}</td> 
-		<td>{{class.days}}</td> 
-		<td>{{class.time}}</td>					
+	{% if saved_classes %}
+	    {% for class in saved_classes %}
+        <tr>
+        <td border="0px">
+            <input type="checkbox"
+                   id="{{ class.rowid }}"
+                   onclick="myClick('{{ class.rowid }}', {{ class.daysarray }}, {{ class.start_hour }}, {{ class.mins }}, '{{ class.department }} {{ class.number }}')"></td>
+		<td>{{ class.school }}</td> 
+        <td>{{ class.department }} {{ class.number }}</td>
+		<td>{{ class.section }}</td>
+		<td>{{ class.building }}</td>
+		<td>{{ class.room }}</td> 
+		<td>{{ class.days }}</td> 
+		<td>{{ class.time }}</td>
+
+        </tr>
 	    {% endfor %}
-	{%endif %}
+	{% endif %}
 	
 	</table>
 	</div>	

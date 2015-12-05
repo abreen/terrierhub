@@ -107,13 +107,14 @@ def api(request, function):
             'school': request.GET['school'],
             'department': request.GET['department'],
             'number': request.GET['number'],
-            'section': request.GET['section']
+            'section': request.GET['section'],
+            'startend': request.GET['startend']
         }
 
         if 'courses' not in request.session:
             request.session['courses'] = [to_add]
 
-        elif to_add not in current_courses:
+        elif to_add not in request.session['courses']:
             current_courses = request.session['courses']
             current_courses.append(to_add)
 
@@ -130,5 +131,83 @@ def api(request, function):
     return HttpResponse('')
 
 def schedule(request):
-    return render(request, 'coursedb/schedule.html', {})
+    saved = []
+    rowid = 0
 
+    for section_dict in request.session['courses']:
+        school = section_dict['school']
+        department = section_dict['department']
+        number = section_dict['number']
+        section = section_dict['section']
+        startend = section_dict['startend']
+
+        try:
+            s = School.objects.get(symbol__iexact=school)
+        except:
+            raise Http404("School does not exist")
+
+        try:
+            d = Department.objects.get(school=s, symbol__iexact=department)
+        except:
+            raise Http404("Department does not exist")
+
+        try:
+            c = Course.objects.get(department=d, number=int(number))
+        except:
+            raise Http404("Course does not exist")
+
+        starting, ending = Section.startend_from_string(startend)
+        sec = Section.objects.get(
+            course=c,
+            section__iexact=section,
+            start=starting,
+            end=ending
+        )
+
+        meetings = Meeting.objects.filter(
+            section=sec
+        )
+
+        rowid += 1
+        clazz = {}
+
+        clazz['rowid'] = 'row' + str(rowid)
+        clazz['school'] = s.symbol
+        clazz['department'] = d.symbol
+        clazz['number'] = c.number
+        clazz['section'] = sec.section
+
+        meeting0 = meetings[0]
+
+        clazz['building'] = meeting0.building.symbol
+        clazz['room'] = meeting0.room
+        clazz['days'] = meeting0.days_as_string()
+
+        clazz['time'] = str(meeting0.start.hour) + ':' + \
+                meeting0.start.strftime('%M %p') + '-' + \
+                str(meeting0.end.hour) + ':' + \
+                meeting0.end.strftime('%M %p')
+
+        clazz['daysarray'] = []
+        days_list = Meeting.days_from_int(meeting0.days)
+        for day in days_list:
+            for day_abbrev, i, _ in Meeting.DAYS:
+                if day == day_abbrev:
+                    clazz['daysarray'].append(i)
+                    break
+            else:
+                raise ValueError()
+
+        start = meeting0.start
+        end = meeting0.end
+
+        clazz['start_hour'] = start.hour
+        if start.minute > 0:
+            clazz['start_hour'] += start.minute / 60
+
+        clazz['mins'] = (end.hour * 60 + end.minute) - \
+                (start.hour * 60 + start.minute)
+
+        saved.append(clazz)
+
+    return render(request, 'coursedb/schedule.html', {'saved_classes': saved})
