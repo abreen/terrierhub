@@ -28,7 +28,7 @@ google.maps.event.addDomListener(window, 'load', init_map);
 function add_course(school, dept, num, sec, startend) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET",
-        "/db/api/add_course?school=" + school +
+        "/api/add_course?school=" + school +
         "&department=" + dept +
         "&number=" + num +
         "&section=" + sec +
@@ -39,7 +39,7 @@ function add_course(school, dept, num, sec, startend) {
 
 function clear_course() {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/db/api/clear_courses", true);
+    xhttp.open("GET", "/api/clear_courses", true);
     xhttp.send();
 }
 </script>
@@ -53,7 +53,7 @@ function clear_course() {
 
 
 {% for course in courses_added %}
-{{ course }}<br>
+{{ course.department}}{{course.number}}{{course.section}}<br>
 {% endfor %}
 
 

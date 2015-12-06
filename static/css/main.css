@@ -18,6 +18,12 @@
 html {
     font-size: 100%;
 }
+input {
+  -webkit-border-radius: 3px;
+     border-radius: 3px;
+          border-radius: 3px;
+}
+
 
 body {
     color: black;
@@ -386,6 +392,33 @@ form input[type="submit"] {
     margin-left: 10%;
     
 }
+#college{
+    height:40px;
+    font-size:18pt;
+}
+#department{
+    height:40px;
+    font-size:18pt;
+}
+#course{
+    height:40px;
+    font-size:18pt;
+}
+
+.search{
+    position:relative;
+    float: center;
+    margin-left:15%; 
+    margin-top: 20%;
+}
+.btn{
+    position:relative;
+    padding: 20px;
+    float: center; 
+    margin-left: 38%;
+}
+
+
 form textarea {
     resize: none;
     width: 30em;

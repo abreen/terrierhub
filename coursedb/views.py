@@ -97,7 +97,7 @@ def course(request, school, dept, num):
 
         # using get() here with a default value
         'courses_added': request.session.get('courses', [])
-    }
+    }	
 
     return render(request, 'coursedb/course.html', context)
 
@@ -135,6 +135,7 @@ def schedule(request):
     rowid = 0
 
     for section_dict in request.session['courses']:
+        
         school = section_dict['school']
         department = section_dict['department']
         number = section_dict['number']
