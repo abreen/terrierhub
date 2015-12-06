@@ -126,12 +126,24 @@ function drawConflict(i,y,h,color){
 }
 function findConflict(x,y,h,y2,h2,color){
 	//goes through all the different type of conflicts
-	if (y == y2 && h == h2){
+		if (y == y2 && h == h2){
 	 	//the class is at the same time
  		console.log("time conflict")
 		drawConflict(x,y2,h2,color)
 		return true
 		
+	}
+	else if (((y2+h2)==y)&&(h<=h2)) {
+		//starts before ends after
+	//	console.log("time conflict 2")
+	//	drawConflict(x,y2,h2,color)
+		return false;
+	}
+	else if (((y+h)==y2)&&(h<=h2)) {
+		//starts before ends after
+	//	console.log("time conflict 2")
+	//	drawConflict(x,y2,h2,color)
+		return false;
 	}
 	else if ((y<=y2)&&(h>=h2)) {
 		//starts before ends after
@@ -163,8 +175,9 @@ function findConflict(x,y,h,y2,h2,color){
 		//the class doesn't start till after the saved class ends
 	}
 	return false
-
+	
 }
+
 function timeConflict(x,y,h,remove,className){
 	var c = document.getElementById("myCanvas");
 	var ctx = c.getContext("2d");	
