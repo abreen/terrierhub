@@ -15,7 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-
+from django.conf import settings
+import os
 from coursedb import urls
 
+#if settings.DEBUG404:
+#    urlpatterns += patterns('',
+#        (r'^static/(?P<path>.*)$', 'django.views.static.serve',
+#         {'document_root': os.path.join(os.path.dirname('coursedb/templates/404.html'), 'static')} ),
+#    )
+import django.views.defaults
 urlpatterns = urls.urlpatterns
+
+
