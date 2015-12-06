@@ -265,7 +265,7 @@ def scrape(c):
             course=c,
             section=s['section'],
             open_seats=s['open_seats'],
-            instructor=s['instructor'],
+            instructor=s['instructor'] if s['instructor'] is not None else '',
             type=Section.type_to_int(s['type']),
             notes=s['notes'] if s['notes'] is not None else '',
             start=first_meeting.start_date,

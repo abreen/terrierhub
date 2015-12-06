@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.http import Http404, HttpResponse
+from django.template import RequestContext
 
 from .models import School, Department, Course, Location, Section, Meeting
 from .deep_scraper import scrape
@@ -210,5 +211,14 @@ def schedule(request):
                 (start.hour * 60 + start.minute)
 
         saved.append(clazz)
-
     return render(request, 'coursedb/schedule.html', {'saved_classes': saved})
+
+def handler404(request):
+    
+    #response.status_code = 404
+    return render(request, '404.html')
+
+def handler500(request):
+    response = render_to_response('500.html',{}, context_instance=RequestContext(request))
+    response.status_code = 500
+    return response

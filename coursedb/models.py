@@ -93,7 +93,7 @@ class Section(models.Model):
     course = models.ForeignKey(Course)
     section = models.CharField(max_length=40)               # e.g., 'A2'
     open_seats = models.IntegerField('open seats', null=True)
-    instructor = models.CharField('instructor', max_length=200)
+    instructor = models.CharField(default='', blank=True, max_length=200)
     type = models.IntegerField(choices=tuple([(t[1], t[2]) for t in INSTRUCTION_TYPES]))
     notes = models.CharField(default='', blank=True, max_length=600)
 
