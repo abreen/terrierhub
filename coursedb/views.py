@@ -183,9 +183,9 @@ def schedule(request):
         clazz['room'] = meeting0.room
         clazz['days'] = meeting0.days_as_string()
 
-        clazz['time'] = str(meeting0.start.hour) + ':' + \
+        clazz['time'] = str(meeting0.start.hour % 12) + ':' + \
                 meeting0.start.strftime('%M %p') + '-' + \
-                str(meeting0.end.hour) + ':' + \
+                str(meeting0.end.hour % 12) + ':' + \
                 meeting0.end.strftime('%M %p')
 
         clazz['daysarray'] = []
