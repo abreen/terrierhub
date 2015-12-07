@@ -9,7 +9,7 @@
 // cheat sheet
 //to get the text and background of the canvas you need to set them twice
 //a=a.splice(1,2)//((position to remove),(items you want to remove)) removed items are kept in a
-var colors = ['indigo', 'darkblue', 'pink', 'purple', 'palevioletred', 'aquamarine', 'turquoise', 'teal', 'darkorchid', 'coral', 'aqua', 'salmon', 'orchid', 'forestgreen', 'cornflowerblue', 'plum', 'darkmagenta', 'darkslateblue', 'deepskyblue', 'firebrick'];
+var colors = ['indigo', 'darkblue', 'purple', 'palevioletred','turquoise','green', 'teal', 'darkorchid', 'coral','orchid', 'forestgreen', 'plum','slateblue','maroon','seagreen','red','darkmagenta', 'darkslateblue', 'deepskyblue', 'firebrick','steelblue'];
 var index = -1;
 var classes = [];
 var mon = [];
@@ -17,9 +17,7 @@ var tues = [];
 var wed = [];
 var thur = [];
 var fri = [];
-
 function myClick(checkboxID,days,classStart,classTime,className){
-
 	var c = document.getElementById("myCanvas");
 	var ctx = c.getContext("2d");
 	var el = document.getElementById(checkboxID)
@@ -94,21 +92,19 @@ function addClassToSched(days,classStart,classTime,className) {
 		ctx.fillStyle = colors[index];//select color from array
 
 		ctx.fillRect(x+2,y+2,w-4,h-4);	
+		ctx.font="17px Arial";
 		
-		if (timeConflict(days[i],y,h,false,className) == true){
-			//if theres a conflict need to go and draw overlapping lines
-
-		}
-		else{
-			ctx.fillStyle = 'white';
-			ctx.fillText(className,x+10,y+10);
-		}
-
+		
+		timeConflict(days[i],y,h,false,className)
+		ctx.fillStyle = 'white';
+              	ctx.fillText(className,x+25,y+15);
+	
 		addToArray(days[i],y,h,colors[index],className) //add coords to correct array
+	
 	}
 
 };
-function drawConflict(i,y,h,color){
+function drawConflict(i,y,h,color,name){
 	var w,x;
 	var c = document.getElementById("myCanvas");
 	var ctx = c.getContext("2d");	
@@ -124,51 +120,83 @@ function drawConflict(i,y,h,color){
 		ctx.strokeStyle = color
 		ctx.stroke();
 	}
+	ctx.fillStyle = 'white';
+       	ctx.fillText(name,x+25,y+30);
 }
-function findConflict(x,y,h,y2,h2,color){
+function findConflict(x,y,h,y2,h2,color,name){
 	//goes through all the different type of conflicts
 		if (y == y2 && h == h2){
 	 	//the class is at the same time
  		console.log("time conflict")
-		drawConflict(x,y2,h2,color)
+		drawConflict(x,y2,h2,color,name)
 		return true
 		
 	}
 	else if (((y2+h2)==y)&&(h<=h2)) {
 		//starts before ends after
 	//	console.log("time conflict 2")
-	//	drawConflict(x,y2,h2,color)
+	//	drawConflict(x,y2,h2,color,name)
 		return false;
 	}
 	else if (((y+h)==y2)&&(h<=h2)) {
 		//starts before ends after
 	//	console.log("time conflict 2")
-	//	drawConflict(x,y2,h2,color)
+	//	drawConflict(x,y2,h2,color,name)
 		return false;
 	}
-	else if ((y<=y2)&&(h>=h2)) {
+	else if ((y<y2)&&(y+h>y2+h2)) {
 		//starts before ends after
 		console.log("time conflict 2")
-		drawConflict(x,y2,h2,color)
+		drawConflict(x,y2,h,color,name)
 		return false
 	}
-	else if ((y<=y2) && (h<=h2)){
+        else if ((y<y2)&&(y+h<y2+h2)) {
+                //starts before ends after
+           //     console.log("time conflict 2")
+           //     drawConflict(x,y2,h,color,name)
+                return false
+        }
+       // else if ((y>y2)&&(y+h<y2+h2)) {
+                //starts before ends after
+           //     console.log("time conflict 2")
+         //       drawConflict(x,y2,h,color,name)
+        //        return false
+       // }
+        else if ((y>y2)&&(y2+h2<y)) {
+                //starts before ends after
+           //     console.log("time conflict 2")
+               // drawConflict(x,y2,h,color,name)
+                return false
+        }
+        else if ((y==y2)&&(y+h!=y2+h2)) {
+                //starts before ends after
+           //     console.log("time conflict 2")
+                drawConflict(x,y,h,color,name)
+                return false
+        }
+        else if ((y>y2)&&(y+h>y2+h2)) {
+                //starts before ends after
+           //     console.log("time conflict 2")
+                drawConflict(x,y,(y2+h2)-y,color,name)
+                return false
+        }
+	else if ((y<y2) && (y+h>y2)){
 		//starts before ends during
 		console.log("time conflict 3")
-		drawConflict(x,y2,h,color)
+		drawConflict(x,y2,h,color,name)
 		return false
 	}		
 	else if ((y>=y2) && ((y<=h2)||(h<=h2))) {
 		//starts during ends after
 		console.log("time conflict 4")
-		drawConflict(x,y,h,color)
+		drawConflict(x,y,h,color,name)
 		return false
 	}
 	/*
 	else if ((y>=y2) && (h<=h2)){
 		//starts during ends during
 		console.log("time conflict 5")
-		drawConflict(x,y,h,color)
+		drawConflict(x,y,h,color,name)
 		conflict = true
 	}*/
 	else if (y > h2){
@@ -195,10 +223,9 @@ function timeConflict(x,y,h,remove,className){
     				h2 = mon[i][1]
     				color = mon[i][2]
     				name = mon[i][3]
-    				found = findConflict(x,y,h,y2,h2,color) 
-    				if (found == true && remove == true){
+    				found = findConflict(x,y,h,y2,h2,color,name) 
+				if (found == true && remove == true){
     					if (name == className){
-
     						mon.splice(i,1)
     					}
     				}
@@ -213,8 +240,8 @@ function timeConflict(x,y,h,remove,className){
     				h2 = tues[i][1]
     				color = tues[i][2]
     				name = tues[i][3]
-    				found = findConflict(x,y,h,y2,h2,color)  	
-    				if (found == true && remove == true){
+    				found = findConflict(x,y,h,y2,h2,color,name)
+				if (found == true && remove == true){
     					if (name == className){
     						console.log('name')
     						console.log(name)
@@ -233,8 +260,8 @@ function timeConflict(x,y,h,remove,className){
     				h2 = wed[i][1]
     				color = wed[i][2]
     				name = wed[i][3]  		
-    				found = findConflict(x,y,h,y2,h2,color) 
-    				if (found == true && remove == true){
+                                found = findConflict(x,y,h,y2,h2,color,name)
+				if (found == true && remove == true){
     					if (name == className){
     						wed.splice(i,1)
     					}
@@ -250,7 +277,7 @@ function timeConflict(x,y,h,remove,className){
     				h2 = thur[i][1]
     				color = thur[i][2]	
     				name = thur[i][3] 
-    				found = findConflict(x,y,h,y2,h2,color) 	
+                                found = findConflict(x,y,h,y2,h2,color,name)
     				if (found == true && remove == true){
     					if (name ==className){
     						thur.splice(i,1)
@@ -267,7 +294,7 @@ function timeConflict(x,y,h,remove,className){
     				h2 = fri[i][1]
     				color = fri[i][2]
     				name = fri[i][3] 
-    				found = findConflict(x,y,h,y2,h2,color) 
+    				found = findConflict(x,y,h,y2,h2,color,name) 
     				if (found == true && remove == true){
     					if (name == className){
     						fri.splice(i,1)
@@ -277,7 +304,7 @@ function timeConflict(x,y,h,remove,className){
 	    	}	    
 	        break;
 	}
-
+	return found;
 }
 function addToArray(x,y,h,color,className){
 	//add the x,y,h, and color to an array based on the day the class is
@@ -423,15 +450,9 @@ function drawRemovedClass(x,y,h,y2,h2,color,className){
 	ctx.fillStyle = color;//select color from array
 	ctx.fillRect((w*x)+2,y2+2,w-4,h2-4);
 	ctx.fillStyle = 'white';
-	ctx.fillText(className,(w*x)+10,y2+10);		
+	ctx.fillText(className,(w*x)+25,y2+15);		
 }
 
-
-function clear_course() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/api/clear_courses", true);
-    xhttp.send();
-}
 </script>
 </head>
 <body onload="drawGraph()">
@@ -489,16 +510,18 @@ function clear_course() {
 	
 	</table>
 	</div>	
-
+    
     <input
          style = "position:fixed;top:550px;left:80%;"
          type = "button"
          id = "clear"
-         onclick = "clear_course();"
+         onclick = clear_courses()
          value = "Clear Course"
          >
+    
 </div>
 </body>
 </html>
 
 {% endblock %}
+

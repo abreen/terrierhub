@@ -386,11 +386,17 @@ form input[type="submit"] {
     margin-left: 5%;
 
 }
+#clear {
+    position: relative;;
+    float: right;
+ 
+}
+
 #classes {
     width: 700px;
     height: 150px;
     border: 1px solid black;
-    font-size: 25px;
+    font-size: 18px;
     overflow:scroll;
     float: left;
     margin-top: 1.5%;
