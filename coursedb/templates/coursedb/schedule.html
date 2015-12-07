@@ -19,6 +19,7 @@ var thur = [];
 var fri = [];
 
 function myClick(checkboxID,days,classStart,classTime,className){
+
 	var c = document.getElementById("myCanvas");
 	var ctx = c.getContext("2d");
 	var el = document.getElementById(checkboxID)
@@ -425,6 +426,12 @@ function drawRemovedClass(x,y,h,y2,h2,color,className){
 	ctx.fillText(className,(w*x)+10,y2+10);		
 }
 
+
+function clear_course() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "/api/clear_courses", true);
+    xhttp.send();
+}
 </script>
 </head>
 <body onload="drawGraph()">
@@ -487,7 +494,7 @@ function drawRemovedClass(x,y,h,y2,h2,color,className){
          style = "position:fixed;top:550px;left:80%;"
          type = "button"
          id = "clear"
-         onclick = clear_courses()
+         onclick = "clear_course();"
          value = "Clear Course"
          >
 </div>
