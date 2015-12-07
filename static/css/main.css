@@ -92,18 +92,23 @@ img {
     max-width: 100%;
 }
 
-.nav, .subnav {
+.nav {
     color: #fff;
+    background-color: #333333;
     width: 100%;
 }
 
-.nav {
-    background-color: #333333;
+.subnav {
+    color: #333;
 }
 
-.subnav .module-logo {
+.subnav .schools {
     float: left;
     margin: 0.5em;
+}
+
+.schools a {
+    margin-right: 1em;
 }
 
 .subnav {
@@ -135,7 +140,7 @@ img {
 }
 
 .subnav a:hover {
-    color: #eee;
+    color: #666;
     border-bottom: none;
 }
 

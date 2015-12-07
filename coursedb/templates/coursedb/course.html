@@ -1,6 +1,24 @@
 {% extends 'coursedb/base.html' %}
 
 {% block content %}
+
+{% if courses_added %}
+<h3>Currently selected courses</h3>
+<ul class="cart">
+{% for course in courses_added %}
+<li><a href="{% url 'course' course.school course.department course.number %}">{{ course.department}} {{course.number}} {{course.section}}</a></li>
+{% endfor %}
+</ul>
+
+<input
+    type="button"
+    id="clear"
+    onclick="clear_course();"
+    value="Clear Courses"
+>
+
+{% endif %}
+
 <h1>{{ course.title }}</h1>
 <p>{{ department.name }}, {{ school.name }}</p>
 <p class="note">{{ course.note }}</p>
@@ -43,18 +61,6 @@ function clear_course() {
     xhttp.send();
 }
 </script>
-
-<input
-    type="button"
-    id="clear"
-    onclick="clear_course();"
-    value="Clear Courses"
->
-
-
-{% for course in courses_added %}
-{{ course.department}}{{course.number}}{{course.section}}<br>
-{% endfor %}
 
 
 <table class="sections">
