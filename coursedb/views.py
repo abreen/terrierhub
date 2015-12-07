@@ -98,7 +98,7 @@ def course(request, school, dept, num):
 
         # using get() here with a default value
         'courses_added': request.session.get('courses', [])
-    }	
+    }
 
     return render(request, 'coursedb/course.html', context)
 
@@ -185,9 +185,19 @@ def schedule(request):
         clazz['room'] = meeting0.room
         clazz['days'] = meeting0.days_as_string()
 
-        clazz['time'] = str(meeting0.start.hour % 12) + ':' + \
+        if meeting0.start.hour == 12:
+            start_str = '12'
+        else:
+            start_str = str(meeting0.start.hour % 12)
+
+        if meeting0.end.hour == 12:
+            end_str = '12'
+        else:
+            end_str = str(meeting0.end.hour % 12)
+
+        clazz['time'] = start_str + ':' + \
                 meeting0.start.strftime('%M %p') + '-' + \
-                str(meeting0.end.hour % 12) + ':' + \
+                end_str + ':' + \
                 meeting0.end.strftime('%M %p')
 
         clazz['daysarray'] = []
