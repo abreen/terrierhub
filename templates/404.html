@@ -1,0 +1,42 @@
+{%extends 'coursedb/index.html' %}
+{% block content %}
+<!--
+<form method="get" action="/search">
+
+<label for="id_q">Search:</label>
+           <input type="text" name="q" id="id_q"/>
+           <input type="submit" value="Submit"/>
+
+
+        </form>
+-->
+<h4 style="color:red; margin-left:475px;">
+Course could not be found<br>
+Please enter a valid course!</h4>
+
+<div class = "search">
+
+<input id="college" maxlength="3" type="text" placeholder="College" required/>
+<input id="department" maxlength="2" type="text" placeholder="Department" required/>
+<input id="course" maxlength="3" type="text" placeholder="Course Number" required/>
+</div>
+<div class = "btn">
+<button style ="width:200px; height:40px;" id="submit-btn">Submit</button>
+</div>
+
+
+<script>
+  var submit = document.getElementById('submit-btn');
+  var college = document.getElementById('college');
+  var dept = document.getElementById('department');
+  var course = document.getElementById('course');
+
+  submit.addEventListener('click', function() {
+    var queryString = college.value + '/' + dept.value + '/' + course.value;
+    var url = window.location.href;
+    window.location.replace(url+queryString);
+  });
+</script>
+
+{% endblock %}
+
