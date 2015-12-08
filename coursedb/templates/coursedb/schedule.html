@@ -453,9 +453,16 @@ function drawRemovedClass(x,y,h,y2,h2,color,className){
 	ctx.fillText(className,(w*x)+25,y2+15);		
 }
 
-function clear_course() {
+function clear_courses() {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "/api/clear_courses", true);
+
+    xhttp.onload = function(e) {
+        if (xhttp.readyState === 4 && xhttp.status == 200) {
+            history.go(0);
+        }
+    };
+
     xhttp.send();
 }
 
@@ -517,8 +524,8 @@ function clear_course() {
          style = "position:fixed;top:550px;left:80%;"
          type = "button"
          id = "clear"
-	 onclick = "clear_course();history.go(0)";
-	 value = "Clear Course"
+         onclick = "clear_courses();"
+         value = "Clear Courses"
          >
     
 </div>
