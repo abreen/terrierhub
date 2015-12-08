@@ -13,7 +13,7 @@
 <input
     type="button"
     id="clear"
-    onclick="clear_course();"
+    onclick="clear_course();history.go(0)";
     value="Clear Courses"
 >
 
@@ -79,7 +79,7 @@ function clear_course() {
 <input
     type="button"
     id="add"
-    onclick="add_course('{{ school.symbol }}', '{{ department.symbol }}', '{{ course.number }}', '{{ section.section }}', '{{ section.startend_str }}');"
+    onclick="add_course('{{ school.symbol }}', '{{ department.symbol }}', '{{ course.number }}', '{{ section.section }}', '{{ section.startend_str }}');history.go(0)";
     value="Add"
 >
 </td>

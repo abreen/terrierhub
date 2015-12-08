@@ -513,12 +513,12 @@ function clear_course() {
 	</table>
 	</div>	
     
-    <input
+    <input 
          style = "position:fixed;top:550px;left:80%;"
          type = "button"
          id = "clear"
-         onclick = "clear_course();"
-         value = "Clear Course"
+	 onclick = "clear_course();history.go(0)";
+	 value = "Clear Course"
          >
     
 </div>
