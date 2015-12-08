@@ -453,19 +453,22 @@ function drawRemovedClass(x,y,h,y2,h2,color,className){
 	ctx.fillText(className,(w*x)+25,y2+15);		
 }
 
+function clear_course() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "/api/clear_courses", true);
+    xhttp.send();
+}
+
 </script>
 </head>
 <body onload="drawGraph()">
-
+     
      <div id="canvas">
-	<h2>My Schedule</h2>
-
+	<h2>My Schedule </h2>
 		<canvas id="myCanvas" width="700" height="600"
 		style="border:1px solid #000000;">
 		</canvas>
-
 	</div>
-
 	<div id="reminders">
 		<table border="1" height="250px" width="250px">
 		  <tr >
@@ -485,7 +488,6 @@ function drawRemovedClass(x,y,h,y2,h2,color,className){
 		</tr>
 		</table>
 	</div>
-
 	<div id = "classes">
     	<table border="0px" width="700" >
 	
@@ -515,7 +517,7 @@ function drawRemovedClass(x,y,h,y2,h2,color,className){
          style = "position:fixed;top:550px;left:80%;"
          type = "button"
          id = "clear"
-         onclick = clear_courses()
+         onclick = "clear_course();"
          value = "Clear Course"
          >
     
