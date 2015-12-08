@@ -13,7 +13,7 @@
 <input
     type="button"
     id="clear"
-    onclick="clear_course();"
+    onclick="clear_courses();"
     value="Clear Courses"
 >
 
@@ -52,12 +52,26 @@ function add_course(school, dept, num, sec, startend) {
         "&section=" + sec +
         "&startend=" + startend
     , true);
+
+    xhttp.onload = function(e) {
+        if (xhttp.readyState === 4 && xhttp.status == 200) {
+            history.go(0);
+        }
+    };
+
     xhttp.send();
 }
 
-function clear_course() {
+function clear_courses() {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "/api/clear_courses", true);
+
+    xhttp.onload = function(e) {
+        if (xhttp.readyState === 4 && xhttp.status == 200) {
+            history.go(0);
+        }
+    };
+
     xhttp.send();
 }
 </script>
